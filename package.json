@@ -1,0 +1,88 @@
+{
+  "name": "llm-provider-select",
+  "version": "1.0.0",
+  "description": "Plugin para DeepSeek Harness que transforma por completo el selector de proveedores y modelos al diseño de OpenCode Desktop v2",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": "./client.js",
+    "./client.js": "./client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "assets",
+    "demo",
+    "client.js",
+    "cordis.patch.yml",
+    "llm-provider-select.patch.yml",
+    "install.ps1",
+    "install.sh",
+    "README.md",
+    "README.es.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-model-selection"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start:demo": "npx serve demo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dreftian/Llm-provider-select.git"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "opencode",
+    "opencode-desktop",
+    "llm-selector",
+    "model-selector",
+    "provider-selector",
+    "cordis",
+    "ui-plugin"
+  ],
+  "author": "Dreftian",
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "typescript": "^5.9.3"
+  }
+}

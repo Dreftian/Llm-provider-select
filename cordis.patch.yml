@@ -1,0 +1,5 @@
+# Cordis Bundle Patch for DeepSeek Harness
+# LLM Provider Select Plugin
+- insert:
+    - id: llm-provider-select
+      name: 'llm-provider-select'

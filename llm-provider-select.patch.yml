@@ -1,0 +1,3 @@
+- insert:
+    - id: llm-provider-select
+      name: 'llm-provider-select'

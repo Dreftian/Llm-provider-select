@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Provider Select — OpenCode Desktop UI Simulator</title>
+  <link rel="stylesheet" href="demo.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/opencode.svg">
+</head>
+<body>
+
+  <!-- Demo Header -->
+  <header class="demo-header">
+    <div class="demo-badge">
+      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#38bdf8;"></span>
+      SIMULADOR INTERACTIVO · DEEPSEEK HARNESS PLUGIN
+    </div>
+    <h1>OpenCode Desktop Model &amp; Provider Selector</h1>
+    <p>
+      Haz clic en el botón del modelo en la barra inferior para probar el selector con diseño OpenCode Desktop v2:
+      búsqueda en tiempo real, acordeones plegables, badges de contexto/precio y navegación por teclado.
+    </p>
+  </header>
+
+  <!-- Simulated Chat / Composer Area -->
+  <main class="simulated-composer">
+    <textarea class="composer-input-area" placeholder="Escribe un mensaje para probar el selector de modelos..." readonly>Hola, ¿cómo puedes optimizar esta consulta SQL con el modelo activo?</textarea>
+
+    <!-- Composer Footer Controls -->
+    <div class="composer-footer">
+      <div class="composer-left-tools">
+        <!-- Plus Attachment -->
+        <button class="composer-icon-btn" title="Adjuntar archivo o contexto">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+
+        <!-- Access Mode -->
+        <button class="composer-icon-btn" title="Modo de ejecución">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="composer-right-tools">
+        <!-- OpenCode Model Trigger Button -->
+        <button class="oc-model-trigger" id="oc-trigger-btn" aria-haspopup="dialog" aria-expanded="false">
+          <span class="trigger-provider-icon" id="trigger-provider-icon">
+            <!-- Icon injected by demo.js -->
+          </span>
+          <span class="trigger-model-name" id="trigger-model-name">Cargando...</span>
+          <span class="trigger-badge" id="trigger-badge">FREE</span>
+          <svg class="trigger-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Send Button -->
+        <button class="composer-send-btn" title="Enviar mensaje">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+
+        <!-- OpenCode Floating Popover Modal Dialog -->
+        <div class="oc-popover-container" id="oc-popover" role="dialog" aria-label="Selector de Proveedores y Modelos">
+          
+          <!-- Search Bar -->
+          <div class="oc-search-header">
+            <div class="oc-search-wrapper">
+              <svg class="oc-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                class="oc-search-input" 
+                id="oc-search-input" 
+                placeholder="Buscar modelo o proveedor..." 
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button class="oc-search-clear" id="oc-search-clear" style="display: none;" title="Limpiar búsqueda">✕</button>
+            </div>
+          </div>
+
+          <!-- Model & Provider List -->
+          <div class="oc-model-list-viewport" id="oc-model-list">
+            <!-- Injected by demo.js -->
+          </div>
+
+          <!-- Popover Footer -->
+          <div class="oc-popover-footer">
+            <div class="oc-footer-keys">
+              <span><span class="oc-key-chip">↑↓</span> navegar</span>
+              <span><span class="oc-key-chip">↵</span> elegir</span>
+              <span><span class="oc-key-chip">esc</span> salir</span>
+            </div>
+            <a href="#" class="oc-manage-link" onclick="alert('Abre la configuración de proveedores en DeepSeek Harness.'); return false;">
+              <span>+ Conectar</span>
+            </a>
+          </div>
+
+          <!-- Floating Specs Tooltip -->
+          <div class="oc-specs-tooltip" id="oc-specs-tooltip">
+            <!-- Injected by demo.js -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="demo.js"></script>
+</body>
+</html>

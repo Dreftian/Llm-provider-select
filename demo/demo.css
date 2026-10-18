@@ -1,0 +1,627 @@
+/* ==========================================================================
+   OpenCode Desktop Model & Provider Selector Demo CSS
+   ========================================================================== */
+
+:root {
+  --oc-bg-app: #0d0e12;
+  --oc-bg-panel: #14151a;
+  --oc-bg-surface: #1a1b22;
+  --oc-bg-surface-hover: #22232c;
+  --oc-bg-active: rgba(59, 130, 246, 0.12);
+  --oc-border-subtle: rgba(255, 255, 255, 0.08);
+  --oc-border-focus: #3b82f6;
+  --oc-text-primary: #f8fafc;
+  --oc-text-secondary: #94a3b8;
+  --oc-text-muted: #64748b;
+  --oc-accent: #3b82f6;
+  --oc-accent-hover: #2563eb;
+  --oc-free-badge-bg: rgba(16, 185, 129, 0.15);
+  --oc-free-badge-color: #34d399;
+  --oc-free-badge-border: rgba(16, 185, 129, 0.25);
+  --oc-latest-badge-bg: rgba(168, 85, 247, 0.15);
+  --oc-latest-badge-color: #c084fc;
+  --oc-latest-badge-border: rgba(168, 85, 247, 0.25);
+  --oc-radius: 10px;
+  --oc-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--oc-bg-app);
+  color: var(--oc-text-primary);
+  font-family: var(--oc-font);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 20px 80px 20px;
+  background-image: 
+    radial-gradient(circle at 50% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+}
+
+.demo-header {
+  text-align: center;
+  max-width: 680px;
+  margin-bottom: 30px;
+}
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(59, 130, 246, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  margin-bottom: 12px;
+}
+
+.demo-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.demo-header p {
+  color: var(--oc-text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Simulated Composer Bar */
+.simulated-composer {
+  width: 100%;
+  max-width: 760px;
+  background: var(--oc-bg-panel);
+  border: 1px solid var(--oc-border-subtle);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.composer-input-area {
+  width: 100%;
+  min-height: 64px;
+  background: transparent;
+  color: var(--oc-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.composer-input-area::placeholder {
+  color: var(--oc-text-muted);
+}
+
+.composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.composer-left-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.composer-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--oc-text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.composer-icon-btn:hover {
+  color: var(--oc-text-primary);
+  background: var(--oc-bg-surface-hover);
+}
+
+.composer-right-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* OpenCode Trigger Button */
+.oc-model-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 10px 0 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--oc-border-subtle);
+  color: var(--oc-text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  user-select: none;
+}
+
+.oc-model-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.oc-model-trigger:focus-visible {
+  border-color: var(--oc-border-focus);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.oc-model-trigger.is-open {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.trigger-provider-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trigger-provider-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.trigger-model-name {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trigger-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--oc-free-badge-bg);
+  color: var(--oc-free-badge-color);
+  border: 1px solid var(--oc-free-badge-border);
+}
+
+.trigger-chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--oc-text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.oc-model-trigger.is-open .trigger-chevron {
+  transform: rotate(180deg);
+}
+
+.composer-send-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #3b82f6;
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.composer-send-btn:hover {
+  background: #2563eb;
+}
+
+/* ==========================================================================
+   The OpenCode Floating Popover Modal
+   ========================================================================== */
+
+.oc-popover-container {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  width: 420px;
+  max-width: 90vw;
+  background: #141418;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.oc-popover-container.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Search Header */
+.oc-search-header {
+  padding: 12px 14px 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.oc-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.oc-search-icon {
+  position: absolute;
+  left: 10px;
+  width: 15px;
+  height: 15px;
+  color: var(--oc-text-muted);
+  pointer-events: none;
+}
+
+.oc-search-input {
+  width: 100%;
+  height: 36px;
+  background: #1e1e24;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0 32px 0 34px;
+  color: var(--oc-text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.oc-search-input:focus {
+  border-color: var(--oc-border-focus);
+  background: #24242b;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.oc-search-clear {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--oc-text-muted);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.oc-search-clear:hover {
+  color: var(--oc-text-primary);
+}
+
+/* Scrollable Model & Provider List */
+.oc-model-list-viewport {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 8px 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.oc-model-list-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.oc-model-list-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Provider Group (Accordion) */
+.oc-provider-group {
+  margin-bottom: 6px;
+}
+
+.oc-provider-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  padding: 0 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--oc-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s ease;
+}
+
+.oc-provider-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--oc-text-primary);
+}
+
+.oc-provider-chevron {
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  color: var(--oc-text-muted);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.oc-provider-group.collapsed .oc-provider-chevron {
+  transform: rotate(-90deg);
+}
+
+.oc-provider-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.oc-provider-title {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oc-provider-count {
+  font-size: 10px;
+  color: var(--oc-text-muted);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.oc-provider-models {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 6px;
+  margin-top: 2px;
+}
+
+.oc-provider-group.collapsed .oc-provider-models {
+  display: none;
+}
+
+/* Model Row Button */
+.oc-model-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--oc-text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+  position: relative;
+}
+
+.oc-model-row:hover,
+.oc-model-row.is-highlighted {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.oc-model-row.is-active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.oc-model-row-name {
+  flex: 1;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.oc-model-row.is-active .oc-model-row-name {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.oc-model-badges {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 8px;
+}
+
+.oc-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.oc-badge-free {
+  background: var(--oc-free-badge-bg);
+  color: var(--oc-free-badge-color);
+  border: 1px solid var(--oc-free-badge-border);
+}
+
+.oc-badge-latest {
+  background: var(--oc-latest-badge-bg);
+  color: var(--oc-latest-badge-color);
+  border: 1px solid var(--oc-latest-badge-border);
+}
+
+.oc-badge-context {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.oc-check-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--oc-accent);
+  opacity: 0;
+  transform: scale(0.7);
+  transition: all 0.15s ease;
+}
+
+.oc-model-row.is-active .oc-check-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Empty search state */
+.oc-empty-state {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--oc-text-muted);
+  font-size: 13px;
+}
+
+/* Footer Actions */
+.oc-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 11px;
+}
+
+.oc-footer-keys {
+  color: var(--oc-text-muted);
+  display: flex;
+  gap: 8px;
+}
+
+.oc-key-chip {
+  color: var(--oc-text-secondary);
+  font-weight: 600;
+}
+
+.oc-manage-link {
+  color: var(--oc-accent);
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.oc-manage-link:hover {
+  text-decoration: underline;
+}
+
+/* Floating Specs Tooltip */
+.oc-specs-tooltip {
+  position: absolute;
+  top: 60px;
+  right: calc(100% + 14px);
+  width: 270px;
+  background: #1c1c22;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(6px);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1010;
+}
+
+.oc-specs-tooltip.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.oc-tooltip-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.oc-tooltip-desc {
+  font-size: 11px;
+  color: var(--oc-text-muted);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.oc-tooltip-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 10px;
+}
+
+.oc-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+.oc-tooltip-label {
+  color: var(--oc-text-muted);
+}
+
+.oc-tooltip-val {
+  color: var(--oc-text-primary);
+  font-weight: 600;
+}
+
+.oc-tooltip-val.free {
+  color: var(--oc-free-badge-color);
+}
