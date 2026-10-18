@@ -3,11 +3,10 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, } from "rea
 import { ProviderIcon } from "./ProviderIcons.js";
 import styles from "./OpenCodeModelSelect.module.css";
 const STANDARD_EFFORT_OPTIONS = [
-    { id: "off", label: "Desactivado" },
-    { id: "low", label: "Bajo" },
-    { id: "medium", label: "Medio" },
-    { id: "high", label: "Alto" },
-    { id: "max", label: "Máximo" },
+    { id: "off", label: "Predeterminado" },
+    { id: "low", label: "Low" },
+    { id: "medium", label: "Medium" },
+    { id: "high", label: "High" },
 ];
 export function OpenCodeModelSelect({ locked, available, directory, load, select, }) {
     const state = useSyncExternalStore((fn) => directory.subscribe(fn), () => directory.getSnapshot());

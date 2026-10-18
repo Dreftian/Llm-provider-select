@@ -18,11 +18,10 @@ import styles from "./OpenCodeModelSelect.module.css";
 type ViewState = "root" | "providers" | "models" | "effort";
 
 const STANDARD_EFFORT_OPTIONS = [
-  { id: "off", label: "Desactivado" },
-  { id: "low", label: "Bajo" },
-  { id: "medium", label: "Medio" },
-  { id: "high", label: "Alto" },
-  { id: "max", label: "Máximo" },
+  { id: "off", label: "Predeterminado" },
+  { id: "low", label: "Low" },
+  { id: "medium", label: "Medium" },
+  { id: "high", label: "High" },
 ];
 
 export function OpenCodeModelSelect({
