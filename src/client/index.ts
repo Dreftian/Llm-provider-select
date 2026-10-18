@@ -10,7 +10,7 @@ import { OpenCodeModelSelect } from "./OpenCodeModelSelect.js";
 export { OpenCodeModelSelect } from "./OpenCodeModelSelect.js";
 export * from "./types.js";
 
-export const name = "llm-provider-select";
+export const name = "dsh-plugin-llm-provider-select";
 
 export const inject = ["slots", "modelDirectories", "sessions"];
 

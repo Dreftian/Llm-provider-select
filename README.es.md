@@ -100,20 +100,22 @@ En lugar de los menús rígidos de 2 niveles por defecto, implementa la estétic
 
 ## ⚡ Características Principales
 
-### 1. Botón Trigger Estilo OpenCode
-* Sustituye el texto plano por un chip redondeado moderno con borde translúcido.
-* Muestra el icono de la marca del proveedor activo (logo de OpenCode, ballena de DeepSeek, chispa de Claude, etc.).
-* Badge `FREE` integrado automáticamente para modelos gratuitos (como `OpenCode Glm 5.3 Flash Free`).
+### 1. Botón Trigger con Distinción Clara: Proveedor › Modelo
+* Sustituye el texto plano por un chip moderno con borde translúcido en el composer.
+* Muestra el icono de la marca y separa claramente el proveedor del modelo: `[Icono] Proveedor › Modelo`.
+* Ejemplos: `OpenCode Desktop › GLM-5.3-Flash Free` o `Magpie · Responses › GPT-6.1-Sol · Codex`.
+* Badge `FREE` integrado automáticamente para modelos gratuitos.
 * Chevron animado con rotación suave al abrir y cerrar.
 
-### 2. Acordeones Plegables de Proveedores (`ProviderModelSections`)
-* Agrupa los modelos de forma limpia y ordenada bajo su proveedor.
-* Chevron con rotación de 180° e indicador de cantidad de modelos por categoría.
-* Permite colapsar o expandir secciones según tus preferencias.
+### 2. Navegación en Dos Pasos: 1. Proveedores → 2. Modelos
+* **Pestaña 1. Proveedores**: Visualiza todos los proveedores configurados (`OpenCode Desktop`, `Magpie · Responses`, `DeepSeek`, `Claude`, `OpenAI`, etc.) en tarjetas elegantes con su logo de marca, descripción y conteo de modelos. Al hacer clic en un proveedor, se despliegan de inmediato sus modelos disponibles.
+* **Pestaña 2. Modelos**: Muestra los modelos del proveedor activo con una barra de navegación superior (`← Cambiar Proveedor | Proveedor actual`) para regresar con un solo clic.
+* **Pestaña Todos**: Vista completa con acordeones colapsables para los usuarios que prefieren explorar todo el catálogo al mismo tiempo.
+* **Barra de Píldoras Horizontales**: Chips deslizables en la parte superior para alternar instantáneamente entre proveedores.
 
 ### 3. Búsqueda Instantánea y Navegación por Teclado
 * Enfoque automático al abrir el selector.
-* Coincidencia difusa (*fuzzy search*) en tiempo real.
+* Coincidencia difusa (*fuzzy search*) en tiempo real tanto por nombre de proveedor como por modelo.
 * **Operación total sin ratón**:
   * <kbd>↓</kbd> / <kbd>↑</kbd> para desplazarse entre modelos con auto-scroll integrado.
   * <kbd>Enter</kbd> para seleccionar y confirmar el modelo activo.
@@ -121,10 +123,10 @@ En lugar de los menús rígidos de 2 niveles por defecto, implementa la estétic
 
 ### 4. Tarjeta Flotante de Especificaciones (`ModelTooltip`)
 * Pasa el cursor sobre cualquier modelo o selecciónalo con las flechas para inspeccionar:
-  * **Límite de contexto** (ej. 128,000 tokens, 200,000 tokens).
-  * **Salida máxima de tokens** (ej. 8,192 tokens).
-  * **Tarifas de precios** (*100% Gratuito* o coste por millón de tokens).
-  * **Habilidades** (Código, Ejecución de Herramientas, Visión, Razonamiento Profundo).
+  * **Límite de contexto** (ej. 128,000 tokens, 200,000 tokens, 500,000 tokens).
+  * **Salida máxima de tokens** (ej. 8,192 tokens, 128,000 tokens).
+  * **Tarifas de precios** (*100% Gratuito* o coste por millón de tokens de entrada/salida).
+  * **Habilidades** (Código, Ejecución de Herramientas, Visión, Razonamiento Profundo / Thinking).
 
 ---
 

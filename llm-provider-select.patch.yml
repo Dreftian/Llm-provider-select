@@ -1,5 +1,3 @@
 - insert:
-    - id: dsh-plugin-llm-provider-select
-      name: 'dsh-plugin-llm-provider-select'
     - id: llm-provider-select
-      name: 'llm-provider-select'
+      name: dsh-plugin-llm-provider-select

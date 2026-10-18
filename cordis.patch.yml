@@ -1,7 +1,5 @@
 # Cordis Bundle Patch for DeepSeek Harness
 # LLM Provider Select Plugin (OpenCode Desktop v2 Selector)
 - insert:
-    - id: dsh-plugin-llm-provider-select
-      name: 'dsh-plugin-llm-provider-select'
     - id: llm-provider-select
-      name: 'llm-provider-select'
+      name: dsh-plugin-llm-provider-select

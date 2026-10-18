@@ -17,8 +17,8 @@
     </div>
     <h1>OpenCode Desktop Model &amp; Provider Selector</h1>
     <p>
-      Haz clic en el botón del modelo en la barra inferior para probar el selector con diseño OpenCode Desktop v2:
-      búsqueda en tiempo real, acordeones plegables, badges de contexto/precio y navegación por teclado.
+      Diferenciación completa entre <strong>Proveedores</strong> y <strong>Modelos</strong> con la experiencia visual de OpenCode Desktop v2:
+      búsqueda instantánea, selección en dos pasos (1. Proveedor → 2. Modelo), acordeones plegables y badges de especificaciones.
     </p>
   </header>
 
@@ -47,12 +47,16 @@
       </div>
 
       <div class="composer-right-tools">
-        <!-- OpenCode Model Trigger Button -->
+        <!-- OpenCode Model Trigger Button: Provider › Model -->
         <button class="oc-model-trigger" id="oc-trigger-btn" aria-haspopup="dialog" aria-expanded="false">
           <span class="trigger-provider-icon" id="trigger-provider-icon">
             <!-- Icon injected by demo.js -->
           </span>
-          <span class="trigger-model-name" id="trigger-model-name">Cargando...</span>
+          <span class="trigger-label-composite">
+            <span class="trigger-provider-name" id="trigger-provider-name">OpenCode Desktop</span>
+            <span class="trigger-separator">›</span>
+            <span class="trigger-model-name" id="trigger-model-name">GLM-5.3-Flash Free</span>
+          </span>
           <span class="trigger-badge" id="trigger-badge">FREE</span>
           <svg class="trigger-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -89,6 +93,24 @@
             </div>
           </div>
 
+          <!-- Step Tabs: 1. Proveedores | 2. Modelos | Todos -->
+          <div class="oc-stage-tabs">
+            <button class="oc-stage-tab" id="tab-providers">🏢 1. Proveedores</button>
+            <button class="oc-stage-tab active" id="tab-models">🤖 2. Modelos</button>
+            <button class="oc-stage-tab" id="tab-all">📑 Todos</button>
+          </div>
+
+          <!-- Quick Provider Filter Pills -->
+          <div class="oc-provider-pills" id="oc-provider-pills">
+            <!-- Injected by demo.js -->
+          </div>
+
+          <!-- Breadcrumb Header (when in filtered model view) -->
+          <div class="oc-breadcrumb-bar" id="oc-breadcrumb-bar" style="display: none;">
+            <button class="oc-back-btn" id="oc-back-to-providers">← Cambiar Proveedor</button>
+            <span class="oc-breadcrumb-current" id="oc-breadcrumb-current">Proveedor actual</span>
+          </div>
+
           <!-- Model & Provider List -->
           <div class="oc-model-list-viewport" id="oc-model-list">
             <!-- Injected by demo.js -->
@@ -101,14 +123,42 @@
               <span><span class="oc-key-chip">↵</span> elegir</span>
               <span><span class="oc-key-chip">esc</span> salir</span>
             </div>
-            <a href="#" class="oc-manage-link" onclick="alert('Abre la configuración de proveedores en DeepSeek Harness.'); return false;">
-              <span>+ Conectar</span>
-            </a>
+            <a href="#providers" class="oc-manage-link" id="footer-providers-link">🏢 Elegir Proveedor</a>
           </div>
 
-          <!-- Floating Specs Tooltip -->
-          <div class="oc-specs-tooltip" id="oc-specs-tooltip">
-            <!-- Injected by demo.js -->
+          <!-- Specs Tooltip Floating Card -->
+          <div class="oc-specs-tooltip" id="oc-specs-tooltip" role="tooltip" aria-hidden="true">
+            <div class="tooltip-header">
+              <span class="tooltip-provider-icon" id="tt-provider-icon"></span>
+              <span class="tooltip-provider-name" id="tt-provider-name">OpenCode Free</span>
+              <span class="tooltip-badge-pill" id="tt-badge-pill">FREE</span>
+            </div>
+            <div class="tooltip-model-name" id="tt-model-name">GLM-5.3-Flash Free</div>
+            <div class="tooltip-desc" id="tt-desc">Descripción del modelo...</div>
+            <div class="tooltip-grid">
+              <div class="tooltip-cell">
+                <span class="tooltip-label">CONTEXTO</span>
+                <span class="tooltip-val" id="tt-context">128,000</span>
+              </div>
+              <div class="tooltip-cell">
+                <span class="tooltip-label">SALIDA MÁX.</span>
+                <span class="tooltip-val" id="tt-maxout">8,192</span>
+              </div>
+              <div class="tooltip-cell">
+                <span class="tooltip-label">PRECIO ENTRADA</span>
+                <span class="tooltip-val" id="tt-costin">0.00 $</span>
+              </div>
+              <div class="tooltip-cell">
+                <span class="tooltip-label">PRECIO SALIDA</span>
+                <span class="tooltip-val" id="tt-costout">0.00 $</span>
+              </div>
+            </div>
+            <div class="tooltip-caps">
+              <span class="tooltip-label">HABILIDADES</span>
+              <div class="tooltip-tags" id="tt-caps-tags">
+                <span class="tooltip-tag">Código</span>
+              </div>
+            </div>
           </div>
 
         </div>

@@ -3,7 +3,7 @@
  * Host Entrypoint
  */
 import type { Context } from "@deepseek-ai/cordis";
-export declare const name = "llm-provider-select";
+export declare const name = "dsh-plugin-llm-provider-select";
 export interface Config {
     defaultProvider?: string;
     defaultModel?: string;
@@ -11,6 +11,5 @@ export interface Config {
     showPricingBadges?: boolean;
     showTooltips?: boolean;
 }
-export declare const Config: {};
 export declare function apply(ctx: Context, config?: Config): void;
 //# sourceMappingURL=index.d.ts.map

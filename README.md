@@ -100,16 +100,18 @@ Instead of the default nested 2-tier sub-menus, it delivers the celebrated **[Op
 
 ## ⚡ Features
 
-### 1. OpenCode Composer Trigger Pill
+### 1. Distinct Trigger Pill: Provider › Model
 * Replaces plain text with a modern, glass-styled chip in the composer toolbar.
-* Dynamic brand icon matching the active provider (e.g., OpenCode glyph, DeepSeek whale, Claude spark).
-* Embedded `FREE` badge for free-tier models (such as `GLM-5.3-Flash Free`).
+* Displays brand icon and clearly separates the provider and model: `[Icon] Provider › Model`.
+* Examples: `OpenCode Desktop › GLM-5.3-Flash Free` or `Magpie · Responses › GPT-6.1-Sol · Codex`.
+* Embedded `FREE` badge for free-tier models.
 * Smooth chevron rotation when opening and closing.
 
-### 2. Collapsible Provider Accordions (`ProviderModelSections`)
-* Group models logically under their respective providers.
-* Smooth 180° rotating chevrons with model count badges.
-* Keeps favorite or active providers pinned at the top.
+### 2. Two-Stage Navigation: 1. Providers → 2. Models
+* **Tab 1. Providers**: Browse all configured providers (`OpenCode Desktop`, `Magpie · Responses`, `DeepSeek`, `Claude`, `OpenAI`, etc.) in interactive cards showing brand icon, description, and model count. Clicking a provider immediately opens its models.
+* **Tab 2. Models**: Displays models for the active provider, with a top breadcrumb (`← Switch Provider | Current Provider`) to return in 1 click.
+* **Tab All**: Full unified view with collapsible accordions for quick inspection of all providers simultaneously.
+* **Horizontal Provider Pills**: Scrollable quick-select chips at the top to switch between providers instantly.
 
 ### 3. Real-Time Fuzzy Search & Keyboard Navigation
 * Auto-focuses on open.
@@ -121,8 +123,8 @@ Instead of the default nested 2-tier sub-menus, it delivers the celebrated **[Op
 
 ### 4. Interactive Specs Tooltip (`ModelTooltip`)
 * Hover over any model row or highlight it via keyboard to inspect:
-  * **Context window** (e.g., 128,000 tokens, 200,000 tokens).
-  * **Maximum output tokens** (e.g., 8,192 tokens).
+  * **Context window** (e.g., 128,000 tokens, 200,000 tokens, 500,000 tokens).
+  * **Maximum output tokens** (e.g., 8,192 tokens, 128,000 tokens).
   * **Pricing** (e.g., *100% Free* or exact $/M token rates).
   * **Capabilities** (Code, Tool Calling, Vision, Thinking/Reasoning).
 
