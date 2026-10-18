@@ -83,56 +83,56 @@ dsh-plugin-llm-provider-select
 
 ## 🌟 Resumen
 
-**`Llm-provider-select`** (nombre de paquete `dsh-plugin-llm-provider-select`) es un plugin de interfaz para el motor Cordis de **DeepSeek Harness** (`dsh`) diseñado para sustituir por completo el selector nativo de modelos y proveedores.
+**`Llm-provider-select`** (nombre de paquete `dsh-plugin-llm-provider-select`) es un plugin de interfaz para el motor Cordis de **DeepSeek Harness** (`dsh`) diseñado para estructurar el selector de modelos y proveedores con un diseño **ultra compacto** (236px de ancho y filas de 28px), idéntico a OpenCode Desktop v2 y DeepSeek Harness nativo.
 
-En lugar de los menús rígidos de 2 niveles por defecto, implementa la estética visual y experiencia de usuario de **[OpenCode Desktop](https://opencode.ai/es)**:
-- **Popover Modal Flotante con Glassmorphism**: Panel con desenfoque de fondo (*backdrop-filter: blur*), bordes translúcidos y animación de entrada fluida.
-- **Búsqueda Difusa en Tiempo Real**: Filtrado veloz por nombre de modelo, proveedor o capacidades con navegación completa por teclado.
-- **Acordeones de Proveedores e Iconos Oficiales SVG**: Secciones plegables con chevrons rotatorios para OpenCode Free, DeepSeek, Anthropic Claude, OpenAI, Google Gemini, Groq, Mistral, Ollama y WorkBuddy AI.
-- **Badges Visuales Informativos**: Etiquetas estilizadas de `FREE`, `LATEST` y ventana de contexto (`128K`, `1M`).
-- **Tooltip de Especificaciones al Pasar el Cursor**: Tarjeta flotante que muestra tokens de contexto, tokens de salida máximos, precio de entrada/salida y capacidades especiales.
+### 🎯 Arquitectura de Menú Compacto:
+1. **Menú Principal (Root)**:
+   - **Fila 1: `Proveedores`**: Muestra el nombre del proveedor activo actual (`[Icono] Proveedores` → `Magpie ›`).
+   - *Separador sutil de 0.5px*.
+   - **Fila 2: `Esfuerzo`**: Muestra el nivel de razonamiento actual (`⚡ Esfuerzo` → `Alto ›`).
+2. **Sub-vista 1: Lista de Proveedores**:
+   - Al pulsar en **`Proveedores`**, se despliega la lista compacta de todos los proveedores configurados (*OpenCode Desktop, Magpie Responses, Magpie Anthropic, Magpie, etc.*) con sus iconos SVG de marca y checkmark (`✓`) en el activo.
+3. **Sub-vista 2: Selección de Modelo**:
+   - Al seleccionar un proveedor, se navega de inmediato a la sub-vista **`Modelo`**, que lista **únicamente los modelos pertenecientes a ese proveedor seleccionado**.
+   - Incluye barra de retroceso (`← Proveedores`) y buscador compacto.
+   - Al pulsar un modelo, se confirma la selección, se actualiza el composer y se cierra el menú.
+4. **Sub-vista 3: Nivel de Esfuerzo**:
+   - Al pulsar en **`Esfuerzo`**, se listan las opciones (*Desactivado, Bajo, Medio, Alto, Máximo*) con selección de un solo clic.
 
 <p align="center">
-  <img src="assets/preview-selector.svg" alt="Arquitectura del Selector OpenCode Desktop" width="100%" />
+  <img src="assets/preview-selector.svg" alt="Arquitectura del Selector Compacto Proveedores y Modelos" width="100%" />
 </p>
 
 ---
 
 ## ⚡ Características Principales
 
-### 1. Botón Trigger con Distinción Clara: Proveedor › Modelo
-* Sustituye el texto plano por un chip moderno con borde translúcido en el composer.
+### 1. Dimensiones Estrictamente Compactas (236px)
+* Ancho exacto de **236px**, adaptado al tamaño estándar de menús flotantes de DeepSeek Harness y OpenCode Desktop.
+* Altura estricta de **28px** por cada fila de proveedor y modelo.
+* Sin tarjetas sobredimensionadas, sin banners pesados ni márgenes desperdiciados.
+* Acabado Glassmorphic con desenfoque de fondo (*backdrop-filter: blur(20px)*) y bordes translúcidos de 0.5px.
+
+### 2. Flujo Jerárquico: Proveedores → Modelo
+* **Diferenciación total**: Primero se elige el **Proveedor**, y a continuación se eligen los **Modelos** de ese proveedor.
+* Botón de retroceso rápido (`← Volver` / `← Proveedores`) y tecla <kbd>Esc</kbd> para navegar limpiamente entre niveles.
+* Indicador de checkmark (`✓`) de alta fidelidad en el proveedor y modelo activos.
+
+### 3. Botón Trigger en Composer: Proveedor › Modelo
 * Muestra el icono de la marca y separa claramente el proveedor del modelo: `[Icono] Proveedor › Modelo`.
-* Ejemplos: `OpenCode Desktop › GLM-5.3-Flash Free` o `Magpie · Responses › GPT-6.1-Sol · Codex`.
-* Badge `FREE` integrado automáticamente para modelos gratuitos.
-* Chevron animado con rotación suave al abrir y cerrar.
+* Ejemplos: `Magpie › Gemini 3.8 Flash · HIGH` o `OpenCode Desktop › GLM-5.3-Flash Free`.
+* Badge integrado para modelos gratuitos (`FREE`) o niveles de razonamiento (`HIGH`, `MED`).
 
-### 2. Navegación en Dos Pasos: 1. Proveedores → 2. Modelos
-* **Pestaña 1. Proveedores**: Visualiza todos los proveedores configurados (`OpenCode Desktop`, `Magpie · Responses`, `DeepSeek`, `Claude`, `OpenAI`, etc.) en tarjetas elegantes con su logo de marca, descripción y conteo de modelos. Al hacer clic en un proveedor, se despliegan de inmediato sus modelos disponibles.
-* **Pestaña 2. Modelos**: Muestra los modelos del proveedor activo con una barra de navegación superior (`← Cambiar Proveedor | Proveedor actual`) para regresar con un solo clic.
-* **Pestaña Todos**: Vista completa con acordeones colapsables para los usuarios que prefieren explorar todo el catálogo al mismo tiempo.
-* **Barra de Píldoras Horizontales**: Chips deslizables en la parte superior para alternar instantáneamente entre proveedores.
-
-### 3. Búsqueda Instantánea y Navegación por Teclado
-* Enfoque automático al abrir el selector.
-* Coincidencia difusa (*fuzzy search*) en tiempo real tanto por nombre de proveedor como por modelo.
-* **Operación total sin ratón**:
-  * <kbd>↓</kbd> / <kbd>↑</kbd> para desplazarse entre modelos con auto-scroll integrado.
-  * <kbd>Enter</kbd> para seleccionar y confirmar el modelo activo.
-  * <kbd>Esc</kbd> para descartar y cerrar el menú.
-
-### 4. Tarjeta Flotante de Especificaciones (`ModelTooltip`)
-* Pasa el cursor sobre cualquier modelo o selecciónalo con las flechas para inspeccionar:
-  * **Límite de contexto** (ej. 128,000 tokens, 200,000 tokens, 500,000 tokens).
-  * **Salida máxima de tokens** (ej. 8,192 tokens, 128,000 tokens).
-  * **Tarifas de precios** (*100% Gratuito* o coste por millón de tokens de entrada/salida).
-  * **Habilidades** (Código, Ejecución de Herramientas, Visión, Razonamiento Profundo / Thinking).
+### 4. Búsqueda y Navegación por Teclado
+* <kbd>↓</kbd> / <kbd>↑</kbd> para desplazarse entre elementos.
+* <kbd>Enter</kbd> para confirmar la selección.
+* <kbd>Esc</kbd> para regresar a la vista anterior o cerrar el menú.
 
 ---
 
 ## 🚀 Simulador Interactivo en Vivo
 
-Puedes probar la experiencia completa de OpenCode Desktop inmediatamente sin modificar tus archivos de DeepSeek Harness:
+Puedes probar la experiencia completa compacta de 236px inmediatamente en tu navegador:
 
 ```bash
 git clone https://github.com/Dreftian/Llm-provider-select.git

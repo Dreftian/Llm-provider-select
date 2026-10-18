@@ -1,6 +1,5 @@
 import React, {
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
@@ -13,18 +12,18 @@ import type {
   ModelSelectInjected,
   ModelSelection,
 } from "./types.js";
-import { matchesModelSearch } from "./search.js";
 import { ProviderIcon } from "./ProviderIcons.js";
-import { ModelTooltip } from "./ModelTooltip.js";
 import styles from "./OpenCodeModelSelect.module.css";
 
-interface FlattenedRow {
-  model: ModelCatalogModel;
-  provider: ModelProviderGroup;
-  elementId: string;
-}
+type ViewState = "root" | "providers" | "models" | "effort";
 
-type StageView = "providers" | "models" | "all";
+const STANDARD_EFFORT_OPTIONS = [
+  { id: "off", label: "Desactivado" },
+  { id: "low", label: "Bajo" },
+  { id: "medium", label: "Medio" },
+  { id: "high", label: "Alto" },
+  { id: "max", label: "Máximo" },
+];
 
 export function OpenCodeModelSelect({
   locked,
@@ -39,125 +38,74 @@ export function OpenCodeModelSelect({
   );
 
   const [open, setOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<ViewState>("root");
+  const [activeProviderId, setActiveProviderId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
-  const [stageView, setStageView] = useState<StageView>("models");
-  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(
-    null
-  );
-  const [collapsedProviders, setCollapsedProviders] = useState<
-    Record<string, boolean>
-  >({});
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
-  const [hoveredItem, setHoveredItem] = useState<{
-    model: ModelCatalogModel;
-    provider: ModelProviderGroup;
-    top: number;
-  } | null>(null);
 
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const listRef = useRef<HTMLDivElement | null>(null);
-  const idPrefix = useId();
 
-  // Find currently selected model & provider
+  // Determine current active selection
   const currentSelection = useMemo(() => {
     if (!state.current) return null;
     for (const group of state.groups) {
       if (group.id === state.current.provider) {
         const model = group.models.find((m) => m.id === state.current?.model);
-        if (model) {
-          return { provider: group, model };
-        }
+        if (model) return { provider: group, model };
       }
     }
-    // Fallback if not found in groups
     if (state.groups.length > 0 && state.groups[0].models.length > 0) {
       return { provider: state.groups[0], model: state.groups[0].models[0] };
     }
     return null;
   }, [state.current, state.groups]);
 
-  // Sync selectedProviderId to current selection on init
-  useEffect(() => {
-    if (currentSelection?.provider.id && !selectedProviderId) {
-      setSelectedProviderId(currentSelection.provider.id);
-    }
-  }, [currentSelection, selectedProviderId]);
+  // Current effort label
+  const currentEffortLabel = useMemo(() => {
+    const effort = state.current?.reasoningEffort ?? "off";
+    const found = STANDARD_EFFORT_OPTIONS.find((e) => e.id === effort);
+    return found ? found.label : effort;
+  }, [state.current?.reasoningEffort]);
 
-  // Active provider object
-  const activeProvider = useMemo(() => {
-    if (!selectedProviderId) return currentSelection?.provider ?? state.groups[0] ?? null;
-    return state.groups.find((g) => g.id === selectedProviderId) ?? state.groups[0] ?? null;
-  }, [selectedProviderId, currentSelection, state.groups]);
+  // Provider selected for the models sub-view
+  const providerForModels = useMemo(() => {
+    const id = activeProviderId || currentSelection?.provider.id;
+    return state.groups.find((g) => g.id === id) ?? state.groups[0] ?? null;
+  }, [activeProviderId, currentSelection, state.groups]);
 
-  // Filtered groups based on search query
-  const filteredGroups = useMemo(() => {
+  // Filtered models for current provider based on search
+  const visibleModelsForProvider = useMemo(() => {
+    if (!providerForModels) return [];
     const q = query.trim().toLowerCase();
-    const result: {
-      provider: ModelProviderGroup;
-      models: ModelCatalogModel[];
-    }[] = [];
+    if (!q) return providerForModels.models;
+    return providerForModels.models.filter(
+      (m) =>
+        m.name.toLowerCase().includes(q) ||
+        m.id.toLowerCase().includes(q) ||
+        (m.description && m.description.toLowerCase().includes(q))
+    );
+  }, [providerForModels, query]);
 
-    for (const group of state.groups) {
-      // If we are filtering by a specific provider and not in global search
-      if (!q && stageView === "models" && selectedProviderId && group.id !== selectedProviderId) {
-        continue;
-      }
-
-      const matchingModels = group.models.filter((model) => {
-        if (!q) return true;
-        const nameMatch = matchesModelSearch(model.name, q);
-        const providerMatch = matchesModelSearch(group.name, q);
-        return nameMatch.matches || providerMatch.matches;
-      });
-
-      if (matchingModels.length > 0) {
-        result.push({ provider: group, models: matchingModels });
-      }
-    }
-    return result;
-  }, [state.groups, query, stageView, selectedProviderId]);
-
-  // Flatten filtered rows for keyboard navigation
-  const flatRows = useMemo<FlattenedRow[]>(() => {
-    const rows: FlattenedRow[] = [];
-    for (const group of filteredGroups) {
-      if (!query && stageView === "all" && collapsedProviders[group.provider.id]) {
-        continue;
-      }
-      for (const model of group.models) {
-        rows.push({
-          model,
-          provider: group.provider,
-          elementId: `${idPrefix}-${group.provider.id}-${model.id}`,
-        });
-      }
-    }
-    return rows;
-  }, [filteredGroups, collapsedProviders, query, stageView, idPrefix]);
-
-  // Auto focus search input when opening popover
-  useEffect(() => {
-    if (open) {
+  // Toggle open
+  const handleToggleOpen = () => {
+    if (!open) {
       load();
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 50);
-    } else {
-      setHoveredItem(null);
+      setCurrentView("root");
+      setQuery("");
     }
-  }, [open, load]);
+    setOpen((prev) => !prev);
+  };
 
-  // Click outside listener
+  // Close on outside click
   useEffect(() => {
     if (!open) return;
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(e: MouseEvent) {
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node) &&
+        !popoverRef.current.contains(e.target as Node) &&
         triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node)
+        !triggerRef.current.contains(e.target as Node)
       ) {
         setOpen(false);
       }
@@ -166,69 +114,52 @@ export function OpenCodeModelSelect({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
+  // Focus search when entering models view
+  useEffect(() => {
+    if (currentView === "models" && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [currentView]);
+
   // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!open) return;
-
     if (e.key === "Escape") {
       e.preventDefault();
-      setOpen(false);
-      triggerRef.current?.focus();
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (flatRows.length > 0) {
-        const next = (highlightedIndex + 1) % flatRows.length;
-        setHighlightedIndex(next);
-        scrollRowIntoView(next);
-      }
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (flatRows.length > 0) {
-        const prev = (highlightedIndex - 1 + flatRows.length) % flatRows.length;
-        setHighlightedIndex(prev);
-        scrollRowIntoView(prev);
-      }
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (flatRows[highlightedIndex]) {
-        const row = flatRows[highlightedIndex];
-        handleSelectModel(row.provider.id, row.model.id);
+      if (currentView === "models") {
+        setCurrentView("providers");
+        setQuery("");
+      } else if (currentView !== "root") {
+        setCurrentView("root");
+      } else {
+        setOpen(false);
+        triggerRef.current?.focus();
       }
     }
   };
 
-  const scrollRowIntoView = (index: number) => {
-    const target = flatRows[index];
-    if (target) {
-      const el = document.getElementById(target.elementId);
-      el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      if (el && popoverRef.current) {
-        const elRect = el.getBoundingClientRect();
-        const pRect = popoverRef.current.getBoundingClientRect();
-        setHoveredItem({
-          model: target.model,
-          provider: target.provider,
-          top: elRect.top - pRect.top,
-        });
-      }
-    }
-  };
-
+  // Select Model
   const handleSelectModel = async (providerId: string, modelId: string) => {
     const selection: ModelSelection = {
       provider: providerId,
       model: modelId,
+      reasoningEffort: state.current?.reasoningEffort,
     };
     await select(selection);
     setOpen(false);
     triggerRef.current?.focus();
   };
 
-  const toggleProviderCollapse = (providerId: string) => {
-    setCollapsedProviders((prev) => ({
-      ...prev,
-      [providerId]: !prev[providerId],
-    }));
+  // Select Reasoning Effort
+  const handleSelectEffort = async (effortId: string) => {
+    if (!currentSelection) return;
+    const selection: ModelSelection = {
+      provider: currentSelection.provider.id,
+      model: currentSelection.model.id,
+      reasoningEffort: effortId === "off" ? undefined : effortId,
+    };
+    await select(selection);
+    setOpen(false);
+    triggerRef.current?.focus();
   };
 
   const isCurrentFree =
@@ -237,23 +168,23 @@ export function OpenCodeModelSelect({
 
   return (
     <div className={styles.root} onKeyDown={handleKeyDown}>
-      {/* 1. OpenCode Composer Trigger Button: Clear Provider › Model Distinction */}
+      {/* 1. Compact Native Composer Trigger Button */}
       <button
         ref={triggerRef}
         type="button"
         disabled={locked || !available}
-        aria-haspopup="dialog"
+        aria-haspopup="menu"
         aria-expanded={open}
         className={`${styles.trigger} ${open ? styles.triggerOpen : ""}`}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={handleToggleOpen}
       >
         <span className={styles.triggerIcon}>
           <ProviderIcon
             id={currentSelection?.provider.id ?? "opencode"}
-            size={16}
+            size={14}
           />
         </span>
-        <span className={styles.triggerLabel}>
+        <span className={styles.triggerText}>
           <span className={styles.triggerProvider}>
             {currentSelection?.provider.name ?? "Proveedor"}
           </span>
@@ -264,194 +195,103 @@ export function OpenCodeModelSelect({
         </span>
         {isCurrentFree && <span className={styles.triggerBadge}>FREE</span>}
         <svg
-          className={`${styles.triggerChevron} ${
-            open ? styles.triggerChevronOpen : ""
-          }`}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
+          className={`${styles.triggerChevron} ${open ? styles.triggerChevronOpen : ""}`}
+          viewBox="0 0 20 20"
+          fill="currentColor"
         >
           <path
-            d="M18 15l-6-6-6 6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
           />
         </svg>
       </button>
 
-      {/* 2. OpenCode Desktop Popover Dialog */}
+      {/* 2. Compact Popover (Strict 236px width, 28px items) */}
       {open && (
         <div
           ref={popoverRef}
+          role="menu"
           className={styles.popover}
-          role="dialog"
-          aria-label="Selector de Proveedores y Modelos"
+          aria-label="Selector de Proveedor y Esfuerzo"
         >
-          {/* Search Header */}
-          <div className={styles.searchHeader}>
-            <div className={styles.searchWrapper}>
-              <svg
-                className={styles.searchIcon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+          {/* VISTA 1: ROOT ("Proveedores" & "Esfuerzo") */}
+          {currentView === "root" && (
+            <div className={styles.menuStack}>
+              {/* Row 1: Proveedores */}
+              <button
+                type="button"
+                role="menuitem"
+                className={styles.menuRow}
+                onClick={() => setCurrentView("providers")}
               >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                ref={searchInputRef}
-                type="text"
-                className={styles.searchInput}
-                placeholder="Buscar modelo o proveedor..."
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setHighlightedIndex(0);
-                }}
-                spellCheck={false}
-              />
-              {query && (
-                <button
-                  type="button"
-                  className={styles.searchClear}
-                  onClick={() => {
-                    setQuery("");
-                    searchInputRef.current?.focus();
-                  }}
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Differentiating Stage Navigation: 1. Proveedores | 2. Modelos | Todos */}
-          <div className={styles.stageTabs}>
-            <button
-              type="button"
-              className={`${styles.stageTab} ${
-                stageView === "providers" ? styles.stageTabActive : ""
-              }`}
-              onClick={() => {
-                setStageView("providers");
-                setQuery("");
-              }}
-            >
-              <span>🏢</span> 1. Proveedores ({state.groups.length})
-            </button>
-            <button
-              type="button"
-              className={`${styles.stageTab} ${
-                stageView === "models" ? styles.stageTabActive : ""
-              }`}
-              onClick={() => {
-                setStageView("models");
-              }}
-            >
-              <span>🤖</span> 2. Modelos
-            </button>
-            <button
-              type="button"
-              className={`${styles.stageTab} ${
-                stageView === "all" ? styles.stageTabActive : ""
-              }`}
-              onClick={() => {
-                setStageView("all");
-              }}
-            >
-              <span>📑</span> Todos
-            </button>
-          </div>
-
-          {/* Quick Provider Filter Bar (Horizontal scrollable chips) */}
-          <div className={styles.providerFilterBar}>
-            <button
-              type="button"
-              className={`${styles.providerPill} ${
-                !selectedProviderId || stageView === "all"
-                  ? styles.providerPillActive
-                  : ""
-              }`}
-              onClick={() => {
-                setSelectedProviderId(null);
-                setStageView("all");
-              }}
-            >
-              Todos los proveedores
-            </button>
-            {state.groups.map((group) => {
-              const isSelected = selectedProviderId === group.id && stageView === "models";
-              return (
-                <button
-                  key={group.id}
-                  type="button"
-                  className={`${styles.providerPill} ${
-                    isSelected ? styles.providerPillActive : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedProviderId(group.id);
-                    setStageView("models");
-                    setQuery("");
-                  }}
-                >
-                  <ProviderIcon id={group.id} size={13} />
-                  <span>{group.name}</span>
-                  <span style={{ opacity: 0.6, fontSize: "10px" }}>
-                    ({group.models.length})
+                <div className={styles.rowLeft}>
+                  <span className={styles.rowIcon}>🏢</span>
+                  <span className={styles.rowTitle}>Proveedores</span>
+                </div>
+                <div className={styles.rowRight}>
+                  <span className={styles.rowValue}>
+                    {currentSelection?.provider.name ?? "Elegir"}
                   </span>
-                </button>
-              );
-            })}
-          </div>
+                  <span className={styles.chevron}>›</span>
+                </div>
+              </button>
 
-          {/* STAGE 1: Dedicated Provider Selection View */}
-          {stageView === "providers" && !query && (
-            <div className={styles.listViewport}>
-              <div className={styles.providerList}>
+              <div className={styles.separator} />
+
+              {/* Row 2: Esfuerzo */}
+              <button
+                type="button"
+                role="menuitem"
+                className={styles.menuRow}
+                onClick={() => setCurrentView("effort")}
+              >
+                <div className={styles.rowLeft}>
+                  <span className={styles.rowIcon}>⚡</span>
+                  <span className={styles.rowTitle}>Esfuerzo</span>
+                </div>
+                <div className={styles.rowRight}>
+                  <span className={styles.rowValue}>{currentEffortLabel}</span>
+                  <span className={styles.chevron}>›</span>
+                </div>
+              </button>
+            </div>
+          )}
+
+          {/* VISTA 2: LISTA DE PROVEEDORES */}
+          {currentView === "providers" && (
+            <div className={styles.menuStack}>
+              <button
+                type="button"
+                className={styles.headerRow}
+                onClick={() => setCurrentView("root")}
+              >
+                <span className={styles.backArrow}>←</span>
+                <span className={styles.headerTitle}>Proveedores</span>
+              </button>
+
+              <div className={styles.scrollList}>
                 {state.groups.map((group) => {
                   const isActive = currentSelection?.provider.id === group.id;
                   return (
                     <button
                       key={group.id}
                       type="button"
-                      className={`${styles.providerCard} ${
-                        isActive ? styles.providerCardActive : ""
-                      }`}
+                      role="menuitem"
+                      className={`${styles.menuRow} ${isActive ? styles.rowActive : ""}`}
                       onClick={() => {
-                        setSelectedProviderId(group.id);
-                        setStageView("models");
+                        setActiveProviderId(group.id);
+                        setCurrentView("models");
+                        setQuery("");
                       }}
                     >
-                      <div className={styles.providerCardIcon}>
-                        <ProviderIcon id={group.id} size={20} />
+                      <div className={styles.rowLeft}>
+                        <ProviderIcon id={group.id} size={14} />
+                        <span className={styles.rowTitle}>{group.name}</span>
                       </div>
-                      <div className={styles.providerCardInfo}>
-                        <div className={styles.providerCardName}>
-                          <span>{group.name}</span>
-                          {isActive && (
-                            <span className={styles.badgeLatest}>ACTIVO</span>
-                          )}
-                        </div>
-                        <div className={styles.providerCardDesc}>
-                          {group.models.length} modelos listos para usar
-                        </div>
-                      </div>
-                      <div className={styles.providerCardMeta}>
-                        <span className={styles.providerCount}>
-                          {group.models.length} modelos
-                        </span>
-                        <svg
-                          className={styles.providerCardChevron}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M9 18l6-6-6-6" strokeLinecap="round" />
-                        </svg>
+                      <div className={styles.rowRight}>
+                        {isActive && <span className={styles.check}>✓</span>}
+                        <span className={styles.chevron}>›</span>
                       </div>
                     </button>
                   );
@@ -460,194 +300,120 @@ export function OpenCodeModelSelect({
             </div>
           )}
 
-          {/* STAGE 2 & ALL: Models View */}
-          {(stageView !== "providers" || query) && (
-            <>
-              {stageView === "models" && activeProvider && !query && (
-                <div className={styles.breadcrumbHeader}>
-                  <button
-                    type="button"
-                    className={styles.backBtn}
-                    onClick={() => setStageView("providers")}
-                  >
-                    ← Cambiar Proveedor
-                  </button>
-                  <div className={styles.breadcrumbTitle}>
-                    <ProviderIcon id={activeProvider.id} size={14} />
-                    <span>{activeProvider.name}</span>
-                  </div>
+          {/* VISTA 3: MODELOS DEL PROVEEDOR ELEGIDO */}
+          {currentView === "models" && providerForModels && (
+            <div className={styles.menuStack}>
+              <button
+                type="button"
+                className={styles.headerRow}
+                onClick={() => setCurrentView("providers")}
+              >
+                <span className={styles.backArrow}>←</span>
+                <span className={styles.headerTitle}>
+                  {providerForModels.name} · Modelos
+                </span>
+              </button>
+
+              {/* Compact Search Bar if more than 3 models */}
+              {providerForModels.models.length > 3 && (
+                <div className={styles.searchRow}>
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Buscar modelo..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                  {query && (
+                    <button
+                      type="button"
+                      className={styles.searchClear}
+                      onClick={() => setQuery("")}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               )}
 
-              <div ref={listRef} className={styles.listViewport}>
-                {filteredGroups.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    No se encontraron modelos para "<strong>{query}</strong>"
-                  </div>
+              <div className={styles.scrollList}>
+                {visibleModelsForProvider.length === 0 ? (
+                  <div className={styles.emptyState}>No hay modelos</div>
                 ) : (
-                  filteredGroups.map(({ provider, models }) => {
-                    const isCollapsed =
-                      !query &&
-                      stageView === "all" &&
-                      collapsedProviders[provider.id];
+                  visibleModelsForProvider.map((model) => {
+                    const isCurrent =
+                      currentSelection?.provider.id === providerForModels.id &&
+                      currentSelection?.model.id === model.id;
+                    const isFree =
+                      model.name.toLowerCase().includes("free") ||
+                      (model.cost && model.cost.input === 0);
                     return (
-                      <div key={provider.id} className={styles.providerGroup}>
-                        {/* Provider Group Header */}
-                        <button
-                          type="button"
-                          className={styles.providerHeader}
-                          onClick={() => toggleProviderCollapse(provider.id)}
-                        >
-                          <svg
-                            className={`${styles.providerChevron} ${
-                              isCollapsed ? styles.providerChevronCollapsed : ""
-                            }`}
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M6 9l6 6 6-6" strokeLinecap="round" />
-                          </svg>
-                          <span className={styles.providerIcon}>
-                            <ProviderIcon id={provider.id} size={15} />
-                          </span>
-                          <span className={styles.providerTitle}>
-                            {provider.name}
-                          </span>
-                          <span className={styles.providerCount}>
-                            {models.length}
-                          </span>
-                        </button>
-
-                        {/* Model Rows */}
-                        {!isCollapsed && (
-                          <div className={styles.modelRows}>
-                            {models.map((model) => {
-                              const isActive =
-                                currentSelection?.provider.id === provider.id &&
-                                currentSelection?.model.id === model.id;
-                              const elementId = `${idPrefix}-${provider.id}-${model.id}`;
-                              const isHighlighted =
-                                flatRows[highlightedIndex]?.elementId ===
-                                elementId;
-                              const isFree =
-                                model.name.toLowerCase().includes("free") ||
-                                (model.cost && model.cost.input === 0);
-
-                              return (
-                                <button
-                                  key={model.id}
-                                  id={elementId}
-                                  type="button"
-                                  className={`${styles.modelRow} ${
-                                    isActive ? styles.modelRowActive : ""
-                                  } ${
-                                    isHighlighted
-                                      ? styles.modelRowHighlighted
-                                      : ""
-                                  }`}
-                                  onClick={() =>
-                                    handleSelectModel(provider.id, model.id)
-                                  }
-                                  onMouseEnter={(e) => {
-                                    if (popoverRef.current) {
-                                      const r =
-                                        e.currentTarget.getBoundingClientRect();
-                                      const pr =
-                                        popoverRef.current.getBoundingClientRect();
-                                      setHoveredItem({
-                                        model,
-                                        provider,
-                                        top: r.top - pr.top,
-                                      });
-                                    }
-                                  }}
-                                  onMouseLeave={() => setHoveredItem(null)}
-                                >
-                                  <span className={styles.modelName}>
-                                    {model.name}
-                                  </span>
-                                  <div className={styles.badges}>
-                                    {isFree && (
-                                      <span className={styles.badgeFree}>
-                                        FREE
-                                      </span>
-                                    )}
-                                    {model.latest && (
-                                      <span className={styles.badgeLatest}>
-                                        LATEST
-                                      </span>
-                                    )}
-                                    {model.contextLength && (
-                                      <span className={styles.badgeContext}>
-                                        {(model.contextLength / 1000).toFixed(
-                                          0
-                                        )}
-                                        K
-                                      </span>
-                                    )}
-                                  </div>
-                                  {isActive && (
-                                    <svg
-                                      className={styles.checkIcon}
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2.5"
-                                    >
-                                      <polyline
-                                        points="20 6 9 17 4 12"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  )}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
+                      <button
+                        key={model.id}
+                        type="button"
+                        role="menuitem"
+                        className={`${styles.menuRow} ${isCurrent ? styles.rowActive : ""}`}
+                        onClick={() =>
+                          handleSelectModel(providerForModels.id, model.id)
+                        }
+                      >
+                        <div className={styles.rowLeft}>
+                          <span className={styles.modelName}>{model.name}</span>
+                        </div>
+                        <div className={styles.rowRight}>
+                          {model.latest && (
+                            <span className={styles.badgeLatest}>NEW</span>
+                          )}
+                          {isFree && (
+                            <span className={styles.badgeFree}>FREE</span>
+                          )}
+                          {isCurrent && <span className={styles.check}>✓</span>}
+                        </div>
+                      </button>
                     );
                   })
                 )}
               </div>
-            </>
+            </div>
           )}
 
-          {/* Footer Bar */}
-          <div className={styles.footer}>
-            <div className={styles.footerKeys}>
-              <span>
-                <strong className={styles.keyChip}>↑↓</strong> navegar
-              </span>
-              <span>
-                <strong className={styles.keyChip}>↵</strong> elegir
-              </span>
-              <span>
-                <strong className={styles.keyChip}>esc</strong> salir
-              </span>
-            </div>
-            <a
-              href="#providers"
-              className={styles.manageLink}
-              onClick={(e) => {
-                e.preventDefault();
-                setStageView("providers");
-              }}
-            >
-              🏢 Ver todos los proveedores
-            </a>
-          </div>
+          {/* VISTA 4: ESFUERZO DE RAZONAMIENTO */}
+          {currentView === "effort" && (
+            <div className={styles.menuStack}>
+              <button
+                type="button"
+                className={styles.headerRow}
+                onClick={() => setCurrentView("root")}
+              >
+                <span className={styles.backArrow}>←</span>
+                <span className={styles.headerTitle}>Esfuerzo</span>
+              </button>
 
-          {/* Hover Specs Card */}
-          <ModelTooltip
-            model={hoveredItem?.model ?? null}
-            provider={hoveredItem?.provider ?? null}
-            visible={!!hoveredItem}
-            top={hoveredItem?.top ?? 0}
-          />
+              <div className={styles.scrollList}>
+                {STANDARD_EFFORT_OPTIONS.map((opt) => {
+                  const currentEffort = state.current?.reasoningEffort ?? "off";
+                  const isCurrent = currentEffort === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      role="menuitem"
+                      className={`${styles.menuRow} ${isCurrent ? styles.rowActive : ""}`}
+                      onClick={() => handleSelectEffort(opt.id)}
+                    >
+                      <div className={styles.rowLeft}>
+                        <span className={styles.rowTitle}>{opt.label}</span>
+                      </div>
+                      <div className={styles.rowRight}>
+                        {isCurrent && <span className={styles.check}>✓</span>}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

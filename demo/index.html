@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LLM Provider Select — OpenCode Desktop UI Simulator</title>
+  <title>LLM Provider Select — Compact OpenCode Desktop UI Simulator</title>
   <link rel="stylesheet" href="demo.css">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/opencode.svg">
 </head>
@@ -13,16 +13,16 @@
   <header class="demo-header">
     <div class="demo-badge">
       <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#38bdf8;"></span>
-      SIMULADOR INTERACTIVO · DEEPSEEK HARNESS PLUGIN
+      SIMULADOR INTERACTIVO COMPACTO (236px) · DEEPSEEK HARNESS PLUGIN
     </div>
-    <h1>OpenCode Desktop Model &amp; Provider Selector</h1>
+    <h1>Selector Compacto: Proveedores y Esfuerzo</h1>
     <p>
-      Diferenciación completa entre <strong>Proveedores</strong> y <strong>Modelos</strong> con la experiencia visual de OpenCode Desktop v2:
-      búsqueda instantánea, selección en dos pasos (1. Proveedor → 2. Modelo), acordeones plegables y badges de especificaciones.
+      Experiencia ultra compacta (236px, filas de 28px) idéntica a OpenCode Desktop v2 y DeepSeek Harness nativo:
+      menú inicial con <strong>Proveedores</strong> y <strong>Esfuerzo</strong>, desplegando la lista de proveedores y luego los <strong>Modelos</strong> exclusivos del proveedor elegido.
     </p>
   </header>
 
-  <!-- Simulated Chat / Composer Area -->
+  <!-- Simulated Composer Area -->
   <main class="simulated-composer">
     <textarea class="composer-input-area" placeholder="Escribe un mensaje para probar el selector de modelos..." readonly>Hola, ¿cómo puedes optimizar esta consulta SQL con el modelo activo?</textarea>
 
@@ -48,18 +48,18 @@
 
       <div class="composer-right-tools">
         <!-- OpenCode Model Trigger Button: Provider › Model -->
-        <button class="oc-model-trigger" id="oc-trigger-btn" aria-haspopup="dialog" aria-expanded="false">
+        <button class="oc-model-trigger" id="oc-trigger-btn" aria-haspopup="menu" aria-expanded="false">
           <span class="trigger-provider-icon" id="trigger-provider-icon">
-            <!-- Icon injected by demo.js -->
+            <!-- Injected by JS -->
           </span>
           <span class="trigger-label-composite">
-            <span class="trigger-provider-name" id="trigger-provider-name">OpenCode Desktop</span>
+            <span class="trigger-provider-name" id="trigger-provider-name">Magpie</span>
             <span class="trigger-separator">›</span>
-            <span class="trigger-model-name" id="trigger-model-name">GLM-5.3-Flash Free</span>
+            <span class="trigger-model-name" id="trigger-model-name">Gemini 3.8 Flash</span>
           </span>
-          <span class="trigger-badge" id="trigger-badge">FREE</span>
-          <svg class="trigger-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+          <span class="trigger-badge" id="trigger-badge">HIGH</span>
+          <svg class="trigger-chevron" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         </button>
 
@@ -71,100 +71,34 @@
           </svg>
         </button>
 
-        <!-- OpenCode Floating Popover Modal Dialog -->
-        <div class="oc-popover-container" id="oc-popover" role="dialog" aria-label="Selector de Proveedores y Modelos">
-          
-          <!-- Search Bar -->
-          <div class="oc-search-header">
-            <div class="oc-search-wrapper">
-              <svg class="oc-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input 
-                type="text" 
-                class="oc-search-input" 
-                id="oc-search-input" 
-                placeholder="Buscar modelo o proveedor..." 
-                autocomplete="off"
-                spellcheck="false"
-              />
-              <button class="oc-search-clear" id="oc-search-clear" style="display: none;" title="Limpiar búsqueda">✕</button>
-            </div>
+        <!-- Ultra-Compact Popover Dialog (236px) -->
+        <div class="oc-popover-container" id="oc-popover" role="menu" aria-label="Selector de Proveedores y Esfuerzo">
+          <div id="popover-content">
+            <!-- Dynamic Views rendered by demo.js: Root, Providers, Models, Effort -->
           </div>
-
-          <!-- Step Tabs: 1. Proveedores | 2. Modelos | Todos -->
-          <div class="oc-stage-tabs">
-            <button class="oc-stage-tab" id="tab-providers">🏢 1. Proveedores</button>
-            <button class="oc-stage-tab active" id="tab-models">🤖 2. Modelos</button>
-            <button class="oc-stage-tab" id="tab-all">📑 Todos</button>
-          </div>
-
-          <!-- Quick Provider Filter Pills -->
-          <div class="oc-provider-pills" id="oc-provider-pills">
-            <!-- Injected by demo.js -->
-          </div>
-
-          <!-- Breadcrumb Header (when in filtered model view) -->
-          <div class="oc-breadcrumb-bar" id="oc-breadcrumb-bar" style="display: none;">
-            <button class="oc-back-btn" id="oc-back-to-providers">← Cambiar Proveedor</button>
-            <span class="oc-breadcrumb-current" id="oc-breadcrumb-current">Proveedor actual</span>
-          </div>
-
-          <!-- Model & Provider List -->
-          <div class="oc-model-list-viewport" id="oc-model-list">
-            <!-- Injected by demo.js -->
-          </div>
-
-          <!-- Popover Footer -->
-          <div class="oc-popover-footer">
-            <div class="oc-footer-keys">
-              <span><span class="oc-key-chip">↑↓</span> navegar</span>
-              <span><span class="oc-key-chip">↵</span> elegir</span>
-              <span><span class="oc-key-chip">esc</span> salir</span>
-            </div>
-            <a href="#providers" class="oc-manage-link" id="footer-providers-link">🏢 Elegir Proveedor</a>
-          </div>
-
-          <!-- Specs Tooltip Floating Card -->
-          <div class="oc-specs-tooltip" id="oc-specs-tooltip" role="tooltip" aria-hidden="true">
-            <div class="tooltip-header">
-              <span class="tooltip-provider-icon" id="tt-provider-icon"></span>
-              <span class="tooltip-provider-name" id="tt-provider-name">OpenCode Free</span>
-              <span class="tooltip-badge-pill" id="tt-badge-pill">FREE</span>
-            </div>
-            <div class="tooltip-model-name" id="tt-model-name">GLM-5.3-Flash Free</div>
-            <div class="tooltip-desc" id="tt-desc">Descripción del modelo...</div>
-            <div class="tooltip-grid">
-              <div class="tooltip-cell">
-                <span class="tooltip-label">CONTEXTO</span>
-                <span class="tooltip-val" id="tt-context">128,000</span>
-              </div>
-              <div class="tooltip-cell">
-                <span class="tooltip-label">SALIDA MÁX.</span>
-                <span class="tooltip-val" id="tt-maxout">8,192</span>
-              </div>
-              <div class="tooltip-cell">
-                <span class="tooltip-label">PRECIO ENTRADA</span>
-                <span class="tooltip-val" id="tt-costin">0.00 $</span>
-              </div>
-              <div class="tooltip-cell">
-                <span class="tooltip-label">PRECIO SALIDA</span>
-                <span class="tooltip-val" id="tt-costout">0.00 $</span>
-              </div>
-            </div>
-            <div class="tooltip-caps">
-              <span class="tooltip-label">HABILIDADES</span>
-              <div class="tooltip-tags" id="tt-caps-tags">
-                <span class="tooltip-tag">Código</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
   </main>
+
+  <!-- Interactive Control Deck -->
+  <section class="demo-controls-panel">
+    <h3>⚙️ Panel de Pruebas Rápidas</h3>
+    <div class="quick-test-btns">
+      <button class="test-pill" onclick="selectProviderAndModel('magpie', 'group/auto-gemini-3-8-flash')">
+        Magpie · Gemini 3.8 Flash
+      </button>
+      <button class="test-pill" onclick="selectProviderAndModel('magpie-responses', 'codex/gpt-6.1-sol')">
+        Magpie · Responses · GPT-6.1-Sol
+      </button>
+      <button class="test-pill" onclick="selectProviderAndModel('magpie-anthropic', 'zcode/GLM-5.3-Flash')">
+        Magpie · Anthropic · GLM-5.3-Flash
+      </button>
+      <button class="test-pill" onclick="selectProviderAndModel('opencode', 'opencode/glm-5.3-flash-free')">
+        OpenCode Desktop · GLM-5.3 Flash
+      </button>
+    </div>
+  </section>
 
   <script src="demo.js"></script>
 </body>

@@ -83,56 +83,56 @@ dsh-plugin-llm-provider-select
 
 ## 🌟 Overview
 
-**`Llm-provider-select`** (package name `dsh-plugin-llm-provider-select`) is a Cordis client plugin for **DeepSeek Harness** (`dsh` desktop and web runtime) that completely revamps the bottom composer model selector.
+**`Llm-provider-select`** (package name `dsh-plugin-llm-provider-select`) is an interface plugin for the Cordis engine in **DeepSeek Harness** (`dsh`) designed to structure the model and provider selector with an **ultra-compact** design (236px width, 28px row height), identical to OpenCode Desktop v2 and native DeepSeek Harness.
 
-Instead of the default nested 2-tier sub-menus, it delivers the celebrated **[OpenCode Desktop](https://opencode.ai/)** modal selector experience:
-- **Unified Glassmorphism Popover**: Single-layer floating dialog with backdrop blur and smooth entrance animations.
-- **Instant Fuzzy Search**: High-speed filtering by model name, provider, or capability with keyboard navigation.
-- **Provider Accordions & Official Brand Icons**: Clean collapsible sections for OpenCode Free, DeepSeek, Anthropic Claude, OpenAI, Google Gemini, Groq, Mistral, Ollama, and WorkBuddy.
-- **Rich Badges**: Prominent `FREE`, `LATEST`, and Context Window (`128K`, `1M`) pill badges.
-- **Specs Hover Card**: Floating inspection card displaying context size, input/output pricing, and model capabilities.
+### 🎯 Compact Menu Architecture:
+1. **Root Menu**:
+   - **Row 1: `Proveedores` (Providers)**: Displays current active provider name (`[Icon] Proveedores` → `Magpie ›`).
+   - *Subtle 0.5px separator*.
+   - **Row 2: `Esfuerzo` (Effort)**: Displays current reasoning effort level (`⚡ Esfuerzo` → `Alto / High ›`).
+2. **Sub-view 1: Provider Catalog**:
+   - Clicking **`Proveedores`** opens the compact list of all configured providers (*OpenCode Desktop, Magpie Responses, Magpie Anthropic, Magpie, etc.*) with SVG brand icons and a checkmark (`✓`) on the active provider.
+3. **Sub-view 2: Model Selection**:
+   - Selecting any provider immediately navigates to the **`Modelo`** view, displaying **only the models belonging to the chosen provider**.
+   - Includes a back button (`← Proveedores`) and compact search bar.
+   - Clicking a model confirms selection, updates the composer trigger, and closes the menu.
+4. **Sub-view 3: Reasoning Effort**:
+   - Clicking **`Esfuerzo`** lists effort levels (*Desactivado, Bajo, Medio, Alto, Máximo*) with single-click confirmation.
 
 <p align="center">
-  <img src="assets/preview-selector.svg" alt="OpenCode Desktop Selector Architecture" width="100%" />
+  <img src="assets/preview-selector.svg" alt="Compact Provider and Model Architecture" width="100%" />
 </p>
 
 ---
 
 ## ⚡ Features
 
-### 1. Distinct Trigger Pill: Provider › Model
-* Replaces plain text with a modern, glass-styled chip in the composer toolbar.
-* Displays brand icon and clearly separates the provider and model: `[Icon] Provider › Model`.
-* Examples: `OpenCode Desktop › GLM-5.3-Flash Free` or `Magpie · Responses › GPT-6.1-Sol · Codex`.
-* Embedded `FREE` badge for free-tier models.
-* Smooth chevron rotation when opening and closing.
+### 1. Strictly Compact Dimensions (236px)
+* Exact **236px width**, matching the native floating popovers of DeepSeek Harness and OpenCode Desktop.
+* Strict **28px row height** for all provider, model, and effort entries.
+* No oversized cards, no heavy banners, no wasted margin space.
+* Dark glassmorphic finish with backdrop blur (*backdrop-filter: blur(20px)*) and subtle 0.5px translucent borders.
 
-### 2. Two-Stage Navigation: 1. Providers → 2. Models
-* **Tab 1. Providers**: Browse all configured providers (`OpenCode Desktop`, `Magpie · Responses`, `DeepSeek`, `Claude`, `OpenAI`, etc.) in interactive cards showing brand icon, description, and model count. Clicking a provider immediately opens its models.
-* **Tab 2. Models**: Displays models for the active provider, with a top breadcrumb (`← Switch Provider | Current Provider`) to return in 1 click.
-* **Tab All**: Full unified view with collapsible accordions for quick inspection of all providers simultaneously.
-* **Horizontal Provider Pills**: Scrollable quick-select chips at the top to switch between providers instantly.
+### 2. Hierarchical Flow: Providers → Model
+* **Complete distinction**: Choose the **Provider** first, and then pick from the **Models** belonging to that specific provider.
+* Quick back navigation (`← Volver` / `← Proveedores`) and <kbd>Esc</kbd> key support to transition cleanly between views.
+* High-fidelity checkmark (`✓`) on active provider and model.
 
-### 3. Real-Time Fuzzy Search & Keyboard Navigation
-* Auto-focuses on open.
-* Instant query matching across provider names, model IDs, and descriptions.
-* **Full keyboard accessibility**:
-  * <kbd>↓</kbd> / <kbd>↑</kbd> to cycle highlighted models with automatic scroll-into-view.
-  * <kbd>Enter</kbd> to select and activate the model.
-  * <kbd>Esc</kbd> to dismiss.
+### 3. Composer Trigger Pill: Provider › Model
+* Displays official brand glyph and clearly separates provider from model: `[Icon] Provider › Model`.
+* Examples: `Magpie › Gemini 3.8 Flash · HIGH` or `OpenCode Desktop › GLM-5.3-Flash Free`.
+* Integrated badge for free models (`FREE`) or effort levels (`HIGH`, `MED`).
 
-### 4. Interactive Specs Tooltip (`ModelTooltip`)
-* Hover over any model row or highlight it via keyboard to inspect:
-  * **Context window** (e.g., 128,000 tokens, 200,000 tokens, 500,000 tokens).
-  * **Maximum output tokens** (e.g., 8,192 tokens, 128,000 tokens).
-  * **Pricing** (e.g., *100% Free* or exact $/M token rates).
-  * **Capabilities** (Code, Tool Calling, Vision, Thinking/Reasoning).
+### 4. Full Keyboard Navigation
+* <kbd>↓</kbd> / <kbd>↑</kbd> to cycle between rows.
+* <kbd>Enter</kbd> to confirm selection.
+* <kbd>Esc</kbd> to step back to the previous view or dismiss the menu.
 
 ---
 
-## 🚀 Quick Interactive Demo
+## 🚀 Live Interactive Simulator
 
-You can test the exact OpenCode selector interactively right now without installing anything:
+You can test the complete compact 236px experience immediately in your browser:
 
 ```bash
 git clone https://github.com/Dreftian/Llm-provider-select.git
