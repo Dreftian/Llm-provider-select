@@ -1,5 +1,5 @@
 {
-  "name": "llm-provider-select",
+  "name": "dsh-plugin-llm-provider-select",
   "version": "1.0.0",
   "description": "Plugin para DeepSeek Harness que transforma por completo el selector de proveedores y modelos al diseño de OpenCode Desktop v2",
   "main": "./dist/index.js",
@@ -53,6 +53,8 @@
   "keywords": [
     "deepseek-harness",
     "dsh-plugin",
+    "dsh-plugin-llm-provider-select",
+    "llm-provider-select",
     "opencode",
     "opencode-desktop",
     "llm-selector",

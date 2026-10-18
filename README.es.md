@@ -7,21 +7,87 @@
 </p>
 
 <p align="center">
+  <a href="#-cómo-instalar-en-deepseek-harness-interfaz-gráfica"><img src="https://img.shields.io/badge/Instalación-DeepSeek%20Harness%20GUI-1d72f2?style=flat-square&logo=github" alt="Instalación GUI" /></a>
   <a href="#características"><img src="https://img.shields.io/badge/Interfaz-OpenCode%20Desktop%20v2-3b82f6?style=flat-square" alt="OpenCode Desktop UI" /></a>
-  <a href="#instalación"><img src="https://img.shields.io/badge/Plataforma-DeepSeek%20Harness-1d72f2?style=flat-square" alt="DeepSeek Harness" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-emerald?style=flat-square" alt="Licencia MIT" /></a>
   <a href="README.md"><img src="https://img.shields.io/badge/Language-English-blueviolet?style=flat-square" alt="English Version" /></a>
 </p>
 
 ---
 
+## 📥 ¿Cómo instalar en DeepSeek Harness? (Interfaz Gráfica)
+
+Si abriste la ventana modal de **Complementos > + Agregar plugin** en DeepSeek Harness:
+
+<p align="center">
+  <img src="assets/dsh-install-guide.svg" alt="Guía de Instalación en DeepSeek Harness" width="100%" />
+</p>
+
+La interfaz de DeepSeek Harness te solicitará:
+> *"Ingresa el nombre del paquete del complemento, la dirección del repositorio de GitHub o la ruta del directorio local."*
+
+Copia y pega cualquiera de las siguientes opciones en el campo de texto:
+
+### 🌟 Opción 1: Enlace directo del repositorio de GitHub (Recomendada)
+Esta es la opción más sencilla y recomendada. Solo copia y pega la URL oficial:
+
+```text
+https://github.com/Dreftian/Llm-provider-select
+```
+
+*O si prefieres el formato corto de GitHub:*
+```text
+Dreftian/Llm-provider-select
+```
+
+* **¿Cómo funciona?**: DeepSeek Harness descargará y sincronizará de forma automática la última versión oficial del plugin directamente desde GitHub.
+
+---
+
+### 📁 Opción 2: Ruta del directorio local (Si ya tienes el proyecto en tu PC)
+Si ya tienes la carpeta del repositorio descargada o clonada en tu computadora, puedes ingresar la ruta completa a la carpeta:
+
+```text
+C:\Users\Dreitz\.gemini\antigravity\scratch\Llm-provider-select
+```
+*(O la ruta absoluta donde tengas ubicada la carpeta del proyecto en tu disco)*.
+
+* **¿Cómo funciona?**: DeepSeek Harness cargará el complemento en tiempo real directamente desde tus archivos locales, sin necesidad de conexión a internet y permitiéndote realizar modificaciones en vivo.
+
+---
+
+### 📦 Opción 3: Nombre de paquete estándar DSH
+Si utilizas el registro de paquetes oficial de DeepSeek Harness o npm:
+
+```text
+dsh-plugin-llm-provider-select
+```
+*(o también el alias `llm-provider-select`)*.
+
+* **¿Cómo funciona?**: Sigue el estándar de nomenclatura oficial de DeepSeek Harness (`dsh-plugin-*`), exactamente igual al ejemplo que muestra la aplicación (`dsh-plugin-whale-pet`).
+
+---
+
+### 🚀 Guía paso a paso para activarlo:
+1. Abre **DeepSeek Harness Desktop** (o la interfaz web).
+2. En la barra de navegación lateral izquierda, haz clic en **Complementos** (icono de rompecabezas / puzzle).
+3. En la esquina superior derecha, presiona el botón **`+ Agregar plugin`**.
+4. Pega en la casilla de texto el enlace de GitHub:
+   ```text
+   https://github.com/Dreftian/Llm-provider-select
+   ```
+5. Haz clic en el botón azul **Instalar**.
+6. ¡Listo! Abre cualquier conversación y haz clic en el selector de modelo en la barra inferior (composer). Se abrirá de inmediato el nuevo popover flotante con diseño de OpenCode Desktop v2.
+
+---
+
 ## 🌟 Resumen
 
-**`Llm-provider-select`** es un plugin cliente para el motor Cordis de **DeepSeek Harness** (`dsh` en su versión de escritorio y web) diseñado para reemplazar por completo el selector de modelos y proveedores de la barra inferior (composer).
+**`Llm-provider-select`** (nombre de paquete `dsh-plugin-llm-provider-select`) es un plugin de interfaz para el motor Cordis de **DeepSeek Harness** (`dsh`) diseñado para sustituir por completo el selector nativo de modelos y proveedores.
 
-En lugar de los menús nativos escalonados de 2 niveles predeterminados, implementa la galardonada experiencia visual de **[OpenCode Desktop](https://opencode.ai/es)**:
-- **Popover Modal Flotante con Glassmorphism**: Panel de capa única con desenfoque de fondo y animación de entrada fluida.
-- **Búsqueda Difusa en Tiempo Real**: Filtrado veloz por nombre de modelo, proveedor o capacidades con navegación fluida por teclado.
+En lugar de los menús rígidos de 2 niveles por defecto, implementa la estética visual y experiencia de usuario de **[OpenCode Desktop](https://opencode.ai/es)**:
+- **Popover Modal Flotante con Glassmorphism**: Panel con desenfoque de fondo (*backdrop-filter: blur*), bordes translúcidos y animación de entrada fluida.
+- **Búsqueda Difusa en Tiempo Real**: Filtrado veloz por nombre de modelo, proveedor o capacidades con navegación completa por teclado.
 - **Acordeones de Proveedores e Iconos Oficiales SVG**: Secciones plegables con chevrons rotatorios para OpenCode Free, DeepSeek, Anthropic Claude, OpenAI, Google Gemini, Groq, Mistral, Ollama y WorkBuddy AI.
 - **Badges Visuales Informativos**: Etiquetas estilizadas de `FREE`, `LATEST` y ventana de contexto (`128K`, `1M`).
 - **Tooltip de Especificaciones al Pasar el Cursor**: Tarjeta flotante que muestra tokens de contexto, tokens de salida máximos, precio de entrada/salida y capacidades especiales.
@@ -35,7 +101,7 @@ En lugar de los menús nativos escalonados de 2 niveles predeterminados, impleme
 ## ⚡ Características Principales
 
 ### 1. Botón Trigger Estilo OpenCode
-* Sustituye el texto simple por un chip redondeado moderno con borde sutil translúcido.
+* Sustituye el texto plano por un chip redondeado moderno con borde translúcido.
 * Muestra el icono de la marca del proveedor activo (logo de OpenCode, ballena de DeepSeek, chispa de Claude, etc.).
 * Badge `FREE` integrado automáticamente para modelos gratuitos (como `OpenCode Glm 5.3 Flash Free`).
 * Chevron animado con rotación suave al abrir y cerrar.
@@ -75,16 +141,16 @@ Abre [http://localhost:3000](http://localhost:3000) (o abre directamente el arch
 
 ---
 
-## 📦 Métodos de Instalación
+## 📦 Métodos de Instalación Alternativos
 
-### Método 1: Instalador Automático en 1 Clic (Recomendado)
+### Método A: Instalador Automático por Consola (Scripts incluidos)
 
 #### En Windows (PowerShell):
-Ejecuta el script de instalación incluido en el repositorio:
+Ejecuta el script incluido en el repositorio:
 ```powershell
 .\install.ps1
 ```
-O directamente desde PowerShell:
+O directamente vía web en PowerShell:
 ```powershell
 irm https://raw.githubusercontent.com/Dreftian/Llm-provider-select/main/install.ps1 | iex
 ```
@@ -96,13 +162,13 @@ curl -fsSL https://raw.githubusercontent.com/Dreftian/Llm-provider-select/main/i
 
 ---
 
-### Método 2: Configuración en DeepSeek Harness (`cordis.yml`)
+### Método B: Configuración en DeepSeek Harness (`cordis.yml`)
 
 Añade el plugin en tu archivo `~/.dsh/cordis.yml`:
 
 ```yaml
 plugins:
-  - name: 'llm-provider-select'
+  - name: 'dsh-plugin-llm-provider-select'
     defaultProvider: 'opencode-free'
     enableFuzzySearch: true
     showPricingBadges: true
@@ -111,13 +177,13 @@ plugins:
 O mediante el parche de bundle (`cordis.patch.yml`):
 ```yaml
 - insert:
-    - id: llm-provider-select
-      name: 'llm-provider-select'
+    - id: dsh-plugin-llm-provider-select
+      name: 'dsh-plugin-llm-provider-select'
 ```
 
 ---
 
-### Método 3: Inyección Directa en DeepSeek Harness Desktop (`client.js`)
+### Método C: Inyección Directa en DeepSeek Harness Desktop (`client.js`)
 
 Si utilizas la versión empaquetada de DeepSeek Harness Desktop:
 1. Copia el archivo `client.js` en tu carpeta de scripts de DeepSeek Harness (`~/.dsh/plugins/` o dentro de los recursos de la aplicación).
@@ -131,6 +197,7 @@ Si utilizas la versión empaquetada de DeepSeek Harness Desktop:
 Llm-provider-select/
 ├── assets/
 │   ├── banner.svg               # Banner principal en alta resolución
+│   ├── dsh-install-guide.svg    # Diagrama visual de la ventana de instalación DSH
 │   ├── preview-selector.svg     # Diagrama explicativo de la interfaz
 │   └── icons/                   # Iconos vectoriales de marcas (SVG)
 ├── demo/

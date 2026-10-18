@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="50%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#070a10" />
+    </linearGradient>
+
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f293d" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#141c2c" stop-opacity="0.98" />
+    </linearGradient>
+
+    <linearGradient id="accent-blue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+
+    <linearGradient id="glow-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+
+    <filter id="shadow-card" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.75" />
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#3b82f6" flood-opacity="0.2" />
+    </filter>
+
+    <filter id="glow-input" x="-5%" y="-15%" width="110%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#3b82f6" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <style>
+    .font-sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif; }
+    .title { font-weight: 700; fill: #ffffff; font-size: 20px; }
+    .subtitle { font-weight: 400; fill: #94a3b8; font-size: 13.5px; }
+    .code-val { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #67e8f9; font-weight: 600; }
+    .badge-txt { font-weight: 600; font-size: 11.5px; }
+    .desc-txt { font-weight: 400; font-size: 12.5px; fill: #cbd5e1; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="860" height="480" rx="16" fill="url(#bg-grad)" />
+
+  <!-- Background Subtle Grid Decor -->
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="60" x2="860" y2="60" />
+    <line x1="0" y1="120" x2="860" y2="120" />
+    <line x1="0" y1="180" x2="860" y2="180" />
+    <line x1="0" y1="240" x2="860" y2="240" />
+    <line x1="0" y1="300" x2="860" y2="300" />
+    <line x1="0" y1="360" x2="860" y2="360" />
+    <line x1="0" y1="420" x2="860" y2="420" />
+    <line x1="120" y1="0" x2="120" y2="480" />
+    <line x1="240" y1="0" x2="240" y2="480" />
+    <line x1="360" y1="0" x2="360" y2="480" />
+    <line x1="480" y1="0" x2="480" y2="480" />
+    <line x1="600" y1="0" x2="600" y2="480" />
+    <line x1="720" y1="0" x2="720" y2="480" />
+  </g>
+
+  <!-- DeepSeek Harness Header Bar Mock -->
+  <g transform="translate(40, 24)">
+    <circle cx="12" cy="12" r="5" fill="#3b82f6" />
+    <text x="26" y="17" class="font-sans" fill="#94a3b8" font-size="13" font-weight="600" letter-spacing="0.5">DEEPSEEK HARNESS • MODAL DE INSTALACIÓN</text>
+  </g>
+
+  <!-- Main Modal Card (reproducing DSH "Agregar complemento") -->
+  <g transform="translate(110, 56)" filter="url(#shadow-card)">
+    <!-- Modal Container -->
+    <rect width="640" height="388" rx="14" fill="url(#card-grad)" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+
+    <!-- Modal Title -->
+    <text x="36" y="44" class="font-sans title">Agregar complemento</text>
+
+    <!-- Close Icon (X) -->
+    <g transform="translate(584, 28)" stroke="#64748b" stroke-width="2" stroke-linecap="round">
+      <line x1="0" y1="0" x2="14" y2="14" />
+      <line x1="14" y1="0" x2="0" y2="14" />
+    </g>
+
+    <!-- Description Text -->
+    <text x="36" y="78" class="font-sans subtitle">
+      Ingresa el nombre del paquete del complemento, la dirección del repositorio de GitHub
+    </text>
+    <text x="36" y="98" class="font-sans subtitle">
+      o la ruta del directorio local.
+    </text>
+
+    <!-- Glowing Input Box -->
+    <g transform="translate(36, 120)" filter="url(#glow-input)">
+      <rect width="568" height="50" rx="9" fill="#0c1322" stroke="#3b82f6" stroke-width="2" />
+      <!-- Text Inside Input -->
+      <text x="18" y="31" class="font-sans code-val">https://github.com/Dreftian/Llm-provider-select</text>
+      <!-- Blinking Cursor -->
+      <line x1="432" y1="16" x2="432" y2="34" stroke="#67e8f9" stroke-width="2">
+        <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" />
+      </line>
+    </g>
+
+    <!-- 3 Options Supported Cards -->
+    <g transform="translate(36, 186)">
+      <!-- Option 1: GitHub URL (Recomendado) -->
+      <g transform="translate(0, 0)">
+        <rect width="568" height="42" rx="7" fill="rgba(37, 99, 235, 0.12)" stroke="rgba(59, 130, 246, 0.35)" stroke-width="1" />
+        <rect x="10" y="9" width="126" height="24" rx="4" fill="#2563eb" />
+        <text x="73" y="25" text-anchor="middle" class="font-sans badge-txt" fill="#ffffff">★ 1. GitHub URL</text>
+        <text x="146" y="26" class="font-sans desc-txt">Copia y pega el link oficial del repositorio: <tspan fill="#67e8f9" font-weight="600">https://github.com/Dreftian/Llm-provider-select</tspan></text>
+      </g>
+
+      <!-- Option 2: Directorio Local -->
+      <g transform="translate(0, 48)">
+        <rect width="568" height="42" rx="7" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="10" y="9" width="126" height="24" rx="4" fill="rgba(148, 163, 184, 0.2)" stroke="rgba(148, 163, 184, 0.3)" stroke-width="1" />
+        <text x="73" y="25" text-anchor="middle" class="font-sans badge-txt" fill="#e2e8f0">📁 2. Ruta Local</text>
+        <text x="146" y="26" class="font-sans desc-txt">O la ruta en tu disco: <tspan fill="#e2e8f0" font-family="monospace">C:\...\Llm-provider-select</tspan></text>
+      </g>
+
+      <!-- Option 3: Nombre del Paquete -->
+      <g transform="translate(0, 96)">
+        <rect width="568" height="42" rx="7" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="10" y="9" width="126" height="24" rx="4" fill="rgba(148, 163, 184, 0.2)" stroke="rgba(148, 163, 184, 0.3)" stroke-width="1" />
+        <text x="73" y="25" text-anchor="middle" class="font-sans badge-txt" fill="#e2e8f0">📦 3. Nombre DSH</text>
+        <text x="146" y="26" class="font-sans desc-txt">Nombre estándar DSH: <tspan fill="#a78bfa" font-weight="600">dsh-plugin-llm-provider-select</tspan></text>
+      </g>
+    </g>
+
+    <!-- Bottom Action Button: Instalar -->
+    <g transform="translate(36, 336)">
+      <rect width="568" height="38" rx="8" fill="url(#accent-blue)" />
+      <text x="284" y="24" text-anchor="middle" class="font-sans" fill="#ffffff" font-size="14" font-weight="600" letter-spacing="0.3">
+        Instalar Complemento
+      </text>
+    </g>
+  </g>
+</svg>
